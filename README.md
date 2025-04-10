@@ -6,9 +6,13 @@ A customized Arch Linux-based Docker container for penetration testing and secur
 
 - Built on Arch Linux base
 - BlackArch repository pre-configured
-- Essential tools pre-installed:
-  - `nmap` (via pacman)
-  - `seclists` (via yay)
+- Extensive collection of pre-installed security tools:
+  - Reconnaissance tools (nmap, wireshark, etc.)
+  - Exploitation frameworks (metasploit, etc.)
+  - Web application scanners (sqlmap, etc.)
+  - Password cracking utilities (hydra, etc.)
+  - And many more from both official repos and AUR
+- Customizable package lists for both pacman and AUR packages
 - Automatic dotfiles configuration using the archdawn system
 - Non-root user setup with sudo privileges
 - AUR support via yay
@@ -65,15 +69,90 @@ The container automatically configures dotfiles using the archdawn system:
 - Links Neovim, Zsh, and shell configurations
 - Creates a consistent environment on every container start
 
+## Package Management
+
+### Using the Package Management Script
+
+The included `manage-packages.sh` script helps you manage packages:
+
+```bash
+# Add packages to pacman list
+./manage-packages.sh -p nmap wireshark
+
+# Add packages to yay/AUR list
+./manage-packages.sh -y seclists burpsuite-free
+
+# Remove packages from any list
+./manage-packages.sh -r nmap burpsuite-free
+
+# List all current packages
+./manage-packages.sh -l
+```
+
+This makes it easy to maintain your customized tool list without directly editing the package files.
+
+### Managing Packages in Running Containers
+
+Important: Package list changes only affect newly built images, not running containers.
+
+**Workflow for adding/removing packages:**
+
+1. Modify package lists using the management script or by editing the files directly
+2. Rebuild the Docker image:
+   ```bash
+   docker build -t archpwnbox .
+   ```
+3. Start a fresh container with the updated package set:
+   ```bash
+   docker run -it archpwnbox
+   ```
+
+**For one-time package installations in a running container:**
+
+You can install packages directly in a running container, but these changes will be lost when the container stops:
+```bash
+# For official packages
+sudo pacman -S package-name
+
+# For AUR packages
+yay -S package-name
+```
+
+For persistence, add frequently used packages to the appropriate list files.
+
 ## Customization
+
+### Package Management
+
+The container uses two list files to manage packages:
+
+- `pacman-packages.txt`: For official repository packages (installed with pacman)
+- `yay-packages.txt`: For AUR packages (installed with yay)
+
+To add or remove packages, simply edit these files before building the container. Each file supports:
+- One package per line
+- Comments (lines starting with #)
+- Blank lines for organization
+
+Example:
+```
+# Security tools
+nmap
+metasploit
+
+# Utilities
+htop
+```
 
 ### Adding More Tools
 
-To add more tools to the base image, modify the Dockerfile:
+To add tools beyond the package lists, modify the Dockerfile:
 
 ```dockerfile
-# Install additional BlackArch tools
-RUN pacman -S --noconfirm metasploit burpsuite wireshark
+# Install additional tools with custom commands
+RUN git clone https://github.com/example/tool.git && \
+    cd tool && \
+    make install
 ```
 
 ### Using Different Dotfiles

@@ -1,0 +1,14 @@
+# Packages to install with yay (AUR)
+# One package per line, comments start with #
+
+# Security tools
+seclists
+burpsuite-free
+exploitdb
+
+# Development tools
+visual-studio-code-bin
+
+# Additional utilities
+lsd
+bat

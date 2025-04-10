@@ -1,0 +1,18 @@
+# Packages to install with pacman
+# One package per line, comments start with #
+
+# Security tools
+nmap
+metasploit
+wireshark-cli
+sqlmap
+hydra
+
+# System utilities
+htop
+tmux
+zip
+unzip
+
+# Development tools
+python-pip

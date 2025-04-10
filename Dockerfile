@@ -5,7 +5,7 @@ FROM archlinux:latest
 # Set shell to bash
 SHELL ["/bin/bash", "-c"]
 
-# Update system and install basic tools
+# Install basic tools
 RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm base-devel git wget curl sudo vim neovim
 
@@ -15,8 +15,14 @@ RUN curl -O https://blackarch.org/strap.sh && \
     ./strap.sh && \
     rm strap.sh
 
-# Install nmap using pacman
-RUN pacman -S --noconfirm nmap
+# Copy package lists
+COPY pacman-packages.txt /tmp/pacman-packages.txt
+COPY yay-packages.txt /tmp/yay-packages.txt
+
+# Install packages from pacman-packages.txt
+RUN if [ -s /tmp/pacman-packages.txt ]; then \
+        pacman -S --noconfirm $(cat /tmp/pacman-packages.txt | grep -v "^#" | tr "\n" " "); \
+    fi
 
 # Create a non-root user for yay
 RUN useradd -m -G wheel -s /bin/bash archuser && \
@@ -34,7 +40,9 @@ RUN git clone https://aur.archlinux.org/yay.git && \
     rm -rf yay
 
 # Install seclists using yay
-RUN yay -S --noconfirm seclists
+RUN if [ -s /tmp/yay-packages.txt ]; then \
+        yay -S --noconfirm $(cat /tmp/yay-packages.txt | grep -v "^#" | tr "\n" " "); \
+    fi
 
 # Setup for dotfiles
 RUN mkdir -p /home/archuser/.config

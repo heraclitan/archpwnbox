@@ -5,9 +5,9 @@ FROM archlinux:latest
 # Set shell to bash
 SHELL ["/bin/bash", "-c"]
 
-# Install basic tools
+# Install basic tools first
 RUN pacman -Syu --noconfirm && \
-    pacman -S --noconfirm base-devel git wget curl sudo
+    pacman -S --noconfirm base-devel git wget curl sudo vim neovim
 
 # Setup BlackArch repository
 RUN curl -O https://blackarch.org/strap.sh && \
@@ -17,18 +17,24 @@ RUN curl -O https://blackarch.org/strap.sh && \
 
 # Copy package lists
 COPY pacman-packages.txt /tmp/pacman-packages.txt
-COPY yay-packages.txt /tmp/yay-packages.txt
 
 # Install packages from pacman-packages.txt
 RUN if [ -s /tmp/pacman-packages.txt ]; then \
         pacman -S --noconfirm $(cat /tmp/pacman-packages.txt | grep -v "^#" | tr "\n" " "); \
     fi
 
+# Copy entrypoint script and set permissions
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Create a non-root user for yay
 RUN useradd -m -G wheel -s /bin/bash archuser && \
     echo "archuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# Switch to the non-root user
+# Copy yay packages list
+COPY yay-packages.txt /tmp/yay-packages.txt
+
+# Switch to the non-root user for AUR operations
 USER archuser
 WORKDIR /home/archuser
 
@@ -39,7 +45,7 @@ RUN git clone https://aur.archlinux.org/yay-bin.git && \
     cd .. && \
     rm -rf yay-bin
 
-# Install seclists using yay
+# Install yay packages
 RUN if [ -s /tmp/yay-packages.txt ]; then \
         yay -S --noconfirm $(cat /tmp/yay-packages.txt | grep -v "^#" | tr "\n" " "); \
     fi
@@ -52,16 +58,8 @@ RUN git clone https://github.com/heraclitan/archdawn.git /home/archuser/archdawn
     chmod +x /home/archuser/archdawn/archdawn && \
     ln -sf /home/archuser/archdawn/archdawn /home/archuser/init_dotfiles.sh
 
-# Set up entrypoint
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# Define TERM environment variable
+# Set environment variables
 ENV TERM=xterm-256color
-
-# Set the default user to archuser
-USER archuser
-WORKDIR /home/archuser
 
 # Set the entrypoint
 ENTRYPOINT ["/entrypoint.sh"]

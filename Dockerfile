@@ -6,8 +6,7 @@ FROM archlinux:latest
 SHELL ["/bin/bash", "-c"]
 
 # Install basic tools
-RUN pacman -Syu --noconfirm && \
-    pacman -S --noconfirm base-devel git wget curl sudo vim neovim
+RUN pacman -Syu --noconfirm
 
 # Setup BlackArch repository
 RUN curl -O https://blackarch.org/strap.sh && \

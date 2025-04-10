@@ -8,6 +8,9 @@ openbsd-netcat
 metasploit
 
 # System utilities
+neovim
+curl
+unzip
 
 # Development tools
 python-pip

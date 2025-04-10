@@ -3,16 +3,11 @@
 
 # Security tools
 nmap
+ffuf
+openbsd-netcat
 metasploit
-wireshark-cli
-sqlmap
-hydra
 
 # System utilities
-htop
-tmux
-zip
-unzip
 
 # Development tools
 python-pip

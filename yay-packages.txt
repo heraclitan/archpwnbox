@@ -3,12 +3,8 @@
 
 # Security tools
 seclists
-burpsuite-free
-exploitdb
+gobuster
 
 # Development tools
-visual-studio-code-bin
 
 # Additional utilities
-lsd
-bat

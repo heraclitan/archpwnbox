@@ -1,74 +1,3 @@
-# ArchPwnBox
-
-A customized Arch Linux-based Docker container for penetration testing and security research.
-
-## Features
-
-- Built on Arch Linux base
-- BlackArch repository pre-configured
-- Extensive collection of pre-installed security tools:
-  - Reconnaissance tools (nmap, wireshark, etc.)
-  - Exploitation frameworks (metasploit, etc.)
-  - Web application scanners (sqlmap, etc.)
-  - Password cracking utilities (hydra, etc.)
-  - And many more from both official repos and AUR
-- Customizable package lists for both pacman and AUR packages
-- Automatic dotfiles configuration using the archdawn system
-- Non-root user setup with sudo privileges
-- AUR support via yay
-
-## Quick Start
-
-### Build the Image
-
-```bash
-git clone https://github.com/yourusername/archpwnbox.git
-cd archpwnbox
-docker build -t archpwnbox .
-```
-
-### Run the Container
-
-```bash
-docker run -it --rm archpwnbox
-```
-
-## Usage
-
-### Basic Operation
-
-- The container has two users:
-  - `root` (for system-level operations)
-  - `archuser` (for normal usage and AUR packages)
-- Your dotfiles will be automatically set up on container start
-- BlackArch tools can be installed with: `pacman -S <tool-name>`
-- AUR packages can be installed with: `yay -S <package-name>`
-
-### Persistence
-
-To persist data between container restarts:
-
-```bash
-docker run -it -v /path/on/host:/home/archuser/data archpwnbox
-```
-
-### Network Configuration
-
-For network testing:
-
-```bash
-docker run -it --network host archpwnbox
-```
-
-## Dotfiles
-
-The container automatically configures dotfiles using the archdawn system:
-
-- Clones the dotfiles repository from GitHub
-- Sets up directory structure for configurations
-- Links Neovim, Zsh, and shell configurations
-- Creates a consistent environment on every container start
-
 ## Package Management
 
 ### Using the Package Management Script
@@ -114,11 +43,98 @@ You can install packages directly in a running container, but these changes will
 # For official packages
 sudo pacman -S package-name
 
-# For AUR packages
+# For AUR packages 
 yay -S package-name
 ```
 
-For persistence, add frequently used packages to the appropriate list files.
+For persistence, add frequently used packages to the appropriate list files.# ArchPwnBox
+
+A customized Arch Linux-based Docker container for penetration testing and security research.
+
+## Features
+
+- Built on Arch Linux base
+- BlackArch repository pre-configured
+- Extensive collection of pre-installed security tools:
+  - Reconnaissance tools (nmap, wireshark, etc.)
+  - Exploitation frameworks (metasploit, etc.)
+  - Web application scanners (sqlmap, etc.)
+  - Password cracking utilities (hydra, etc.)
+  - And many more from both official repos and AUR
+- Customizable package lists for both pacman and AUR packages
+- Automatic dotfiles configuration using the archdawn system
+- Non-root user setup with sudo privileges
+- AUR support via yay
+
+## Quick Start
+
+### Setup
+
+1. Create a new directory for the project and place all files in it:
+   ```bash
+   mkdir -p archpwnbox
+   cd archpwnbox
+   # Copy all the files into this directory
+   ```
+
+2. Make sure you have these files in your directory:
+   - `Dockerfile`
+   - `entrypoint.sh`
+   - `pacman-packages.txt`
+   - `yay-packages.txt`
+   - `manage-packages.sh` (optional)
+
+### Build the Image
+
+```bash
+# From within the archpwnbox directory
+docker build -t archpwnbox:latest .
+```
+
+### Run the Container
+
+```bash
+# Basic usage
+docker run -it archpwnbox:latest
+
+# With persistence
+docker run -it -v $(pwd)/data:/home/archuser/data archpwnbox:latest
+```
+
+## Usage
+
+### Basic Operation
+
+- The container logs in as `archuser` by default (a non-root user with sudo privileges)
+- For root access, use `sudo` when needed
+- Your dotfiles will be automatically set up on container start
+- BlackArch tools can be installed with: `pacman -S <tool-name>` (with sudo)
+- AUR packages can be installed with: `yay -S <package-name>` (no sudo needed)
+
+### Persistence
+
+To persist data between container restarts:
+
+```bash
+docker run -it -v /path/on/host:/home/archuser/data archpwnbox
+```
+
+### Network Configuration
+
+For network testing:
+
+```bash
+docker run -it --network host archpwnbox
+```
+
+## Dotfiles
+
+The container automatically configures dotfiles using the archdawn system:
+
+- Clones the dotfiles repository from GitHub
+- Sets up directory structure for configurations
+- Links Neovim, Zsh, and shell configurations
+- Creates a consistent environment on every container start
 
 ## Customization
 

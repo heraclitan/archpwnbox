@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Run archdawn initialization as the non-root user
+# Run archdawn initialization
 if [ -f /home/archuser/init_dotfiles.sh ]; then
     echo "Setting up dotfiles using archdawn..."
-    su - archuser -c "/home/archuser/init_dotfiles.sh"
+    /home/archuser/init_dotfiles.sh
 fi
 
 # Install additional dependencies that might be needed for the dotfiles
-su - archuser -c "yay -S --noconfirm zsh neovim git"
+yay -S --noconfirm zsh neovim git 2>/dev/null || echo "Packages already installed or not available"
 
 # Execute the command passed to docker run
 exec "$@"

@@ -6,7 +6,8 @@ FROM archlinux:latest
 SHELL ["/bin/bash", "-c"]
 
 # Install basic tools
-RUN pacman -Syu --noconfirm
+RUN pacman -Syu --noconfirm && \
+    pacman -S --noconfirm base-devel git wget curl sudo
 
 # Setup BlackArch repository
 RUN curl -O https://blackarch.org/strap.sh && \
@@ -32,11 +33,11 @@ USER archuser
 WORKDIR /home/archuser
 
 # Install yay
-RUN git clone https://aur.archlinux.org/yay.git && \
-    cd yay && \
-    makepkg -si --noconfirm && \
+RUN git clone https://aur.archlinux.org/yay-bin.git && \
+    cd yay-bin && \
+    makepkg -si --noconfirm --needed && \
     cd .. && \
-    rm -rf yay
+    rm -rf yay-bin
 
 # Install seclists using yay
 RUN if [ -s /tmp/yay-packages.txt ]; then \
@@ -51,12 +52,16 @@ RUN git clone https://github.com/heraclitan/archdawn.git /home/archuser/archdawn
     chmod +x /home/archuser/archdawn/archdawn && \
     ln -sf /home/archuser/archdawn/archdawn /home/archuser/init_dotfiles.sh
 
-# Switch back to root for final setup
-USER root
-
 # Set up entrypoint
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+# Define TERM environment variable
+ENV TERM=xterm-256color
+
+# Set the default user to archuser
+USER archuser
+WORKDIR /home/archuser
 
 # Set the entrypoint
 ENTRYPOINT ["/entrypoint.sh"]

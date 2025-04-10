@@ -1,6 +1,6 @@
 # ArchPwnBox
 
-An Arch Linux-based Docker container for penetration testing with BlackArch tools, AUR support via yay, and automatic dotfiles configuration.
+An Arch Linux-based Docker container for penetration testing with BlackArch tools, AUR support via yay, and automatic configuration using heraclitan's dotfiles.
 
 ## Setup & Usage
 
@@ -32,7 +32,7 @@ docker run -it -v $(pwd)/data:/home/archuser/data archpwnbox:latest
 - Runs as non-root `archuser` with sudo access
 - BlackArch repository pre-configured
 - Custom tool selection through package lists
-- Automatic dotfiles setup via archdawn
+- Automatic setup of heraclitan's dotfiles via archdawn
 
 ## Managing Tools
 
@@ -57,4 +57,4 @@ Edit these files before building:
 ## Inside the Container
 - BlackArch tools: `sudo pacman -S <tool-name>`
 - AUR packages: `yay -S <package-name>`
-- Your dotfiles are automatically configured at startup
+- heraclitan's dotfiles are automatically configured at startup

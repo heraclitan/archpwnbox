@@ -34,6 +34,9 @@ RUN useradd -m -G wheel -s /bin/bash archuser && \
 # Copy yay packages list
 COPY yay-packages.txt /tmp/yay-packages.txt
 
+# Copy pipx packages list
+COPY pipx-packages.txt /tmp/pipx-packages.txt
+
 # Switch to the non-root user for AUR operations
 USER archuser
 WORKDIR /home/archuser
@@ -50,6 +53,19 @@ RUN if [ -s /tmp/yay-packages.txt ]; then \
         yay -S --noconfirm $(cat /tmp/yay-packages.txt | grep -v "^#" | tr "\n" " "); \
     fi
 
+# Install pipx and configure it
+RUN sudo pacman -S --noconfirm python-pipx && \
+    pipx ensurepath
+
+# Install pipx packages
+RUN if [ -s /tmp/pipx-packages.txt ]; then \
+        cat /tmp/pipx-packages.txt | grep -v "^#" | while read package; do \
+            if [ ! -z "$package" ]; then \
+                pipx install "$package"; \
+            fi \
+        done \
+    fi
+
 # Setup for dotfiles
 RUN mkdir -p /home/archuser/.config
 
@@ -60,6 +76,7 @@ RUN git clone https://github.com/heraclitan/archdawn.git /home/archuser/archdawn
 
 # Set environment variables
 ENV TERM=xterm-256color
+ENV PATH="/home/archuser/.local/bin:${PATH}"
 
 # Set the entrypoint
 ENTRYPOINT ["/entrypoint.sh"]

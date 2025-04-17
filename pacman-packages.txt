@@ -1,6 +1,9 @@
 # Packages to install with pacman
 # One package per line, comments start with #
 
+# Shell enhancements
+zsh-syntax-highlighting
+
 # Security tools
 nmap
 ffuf

@@ -52,9 +52,6 @@ RUN if [ -s /tmp/yay-packages.txt ]; then \
         yay -S --noconfirm $(cat /tmp/yay-packages.txt | grep -v "^#" | tr "\n" " "); \
     fi
 
-# Configure pipx
-RUN pipx ensurepath
-
 # Install pipx packages
 RUN if [ -s /tmp/pipx-packages.txt ]; then \
         cat /tmp/pipx-packages.txt | grep -v "^#" | while read package; do \

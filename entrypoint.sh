@@ -6,9 +6,8 @@ if [ -f /home/archuser/init_dotfiles.sh ]; then
     /home/archuser/init_dotfiles.sh
 fi
 
-# Print clear instructions for the user
+# Display instructions
 cat << 'EOF'
-
 ===========================================================
  Welcome to archpwnbox!
 ===========================================================
@@ -18,14 +17,8 @@ To load your Zsh configuration, please run:
 
     source ~/.config/zsh/.zshrc
 
-You may want to add this to your startup routine.
 ===========================================================
-
 EOF
 
-# Execute the command passed to docker run
-if [ $# -eq 0 ]; then
-    exec /bin/zsh
-else
-    exec "$@"
-fi
+# Execute whatever command was passed
+exec "$@"

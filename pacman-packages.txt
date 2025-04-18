@@ -1,19 +1,19 @@
 # Packages to install with pacman
 # One package per line, comments start with #
 
-# Shell enhancements
+# Base development tools
+base-devel
+git
+wget
+curl
+sudo
+
+# Shell and terminal utilities
+zsh
 zsh-syntax-highlighting
 
-# Security tools
-nmap
-ffuf
-openbsd-netcat
-metasploit
-
-# System utilities
+# Editors
 neovim
-curl
-unzip
 
-# Development tools
-python-pip
+# Python tools
+python-pipx

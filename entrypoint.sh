@@ -6,8 +6,26 @@ if [ -f /home/archuser/init_dotfiles.sh ]; then
     /home/archuser/init_dotfiles.sh
 fi
 
-# Install additional dependencies that might be needed for the dotfiles
-yay -S --noconfirm zsh neovim git 2>/dev/null || echo "Packages already installed or not available"
+# Print clear instructions for the user
+cat << 'EOF'
+
+===========================================================
+ Welcome to archpwnbox!
+===========================================================
+
+Your dotfiles have been set up.
+To load your Zsh configuration, please run:
+
+    source ~/.config/zsh/.zshrc
+
+You may want to add this to your startup routine.
+===========================================================
+
+EOF
 
 # Execute the command passed to docker run
-exec "$@"
+if [ $# -eq 0 ]; then
+    exec /bin/zsh
+else
+    exec "$@"
+fi

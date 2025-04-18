@@ -5,9 +5,8 @@ FROM archlinux:latest
 # Set shell to bash
 SHELL ["/bin/bash", "-c"]
 
-# Install basic tools first
-RUN pacman -Syu --noconfirm && \
-    pacman -S --noconfirm base-devel git wget curl sudo vim neovim
+# Initial system update
+RUN pacman -Syu --noconfirm
 
 # Setup BlackArch repository
 RUN curl -O https://blackarch.org/strap.sh && \
@@ -28,7 +27,7 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Create a non-root user for yay
-RUN useradd -m -G wheel -s /bin/bash archuser && \
+RUN useradd -m -G wheel -s /bin/zsh archuser && \
     echo "archuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Copy yay packages list
@@ -53,9 +52,8 @@ RUN if [ -s /tmp/yay-packages.txt ]; then \
         yay -S --noconfirm $(cat /tmp/yay-packages.txt | grep -v "^#" | tr "\n" " "); \
     fi
 
-# Install pipx and configure it
-RUN sudo pacman -S --noconfirm python-pipx && \
-    pipx ensurepath
+# Configure pipx
+RUN pipx ensurepath
 
 # Install pipx packages
 RUN if [ -s /tmp/pipx-packages.txt ]; then \
@@ -82,4 +80,4 @@ ENV PATH="/home/archuser/.local/bin:${PATH}"
 ENTRYPOINT ["/entrypoint.sh"]
 
 # Default command
-CMD ["/bin/bash"]
+CMD ["/bin/zsh"]

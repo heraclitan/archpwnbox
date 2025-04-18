@@ -2,9 +2,3 @@
 # One package per line, comments start with #
 
 # Security tools
-seclists
-gobuster
-
-# Development tools
-
-# Additional utilities

@@ -69,10 +69,6 @@ RUN git clone https://github.com/heraclitan/archdawn.git /home/archuser/archdawn
     chmod +x /home/archuser/archdawn/archdawn && \
     ln -sf /home/archuser/archdawn/archdawn /home/archuser/init_dotfiles.sh
 
-# Set environment variables
-ENV TERM=xterm-256color
-ENV PATH="/home/archuser/.local/bin:${PATH}"
-
 # Set the entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
 

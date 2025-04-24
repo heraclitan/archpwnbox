@@ -21,11 +21,6 @@ Run the container:
 docker run -it archpwnbox:latest
 ```
 
-Share files with host:
-```bash
-docker run -it -v $(pwd)/shared:/home/archuser/shared archpwnbox:latest
-```
-
 After starting the container, load Zsh configuration:
 ```bash
 source ~/.config/zsh/.zshrc
